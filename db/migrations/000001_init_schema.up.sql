@@ -33,6 +33,6 @@ COMMENT ON COLUMN "agents"."status" IS 'Agent Status can be active or inactive';
 
 ALTER TABLE "tickets" ADD FOREIGN KEY ("assigned_to") REFERENCES "agents" ("id");
 
-ALTER TABLE "assignments" ADD FOREIGN KEY ("ticket_id") REFERENCES "tickets" ("id");
+ALTER TABLE "assignments" ADD FOREIGN KEY ("ticket_id") REFERENCES "tickets" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "assignments" ADD FOREIGN KEY ("agent_id") REFERENCES "agents" ("id");
+ALTER TABLE "assignments" ADD FOREIGN KEY ("agent_id") REFERENCES "agents" ("id") ON DELETE CASCADE;
