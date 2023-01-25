@@ -25,7 +25,7 @@
 
   - init migration : create initial migration
 
-           migrate create -ext sql -dir db/migration -seq init_schema
+           migrate create -ext sql -dir db/migrations -seq init_schema
 
   - Run migration
 
