@@ -17,6 +17,8 @@
 
 ### Migrations
 
+- golang migrate is used to run migrations on the database
+
 ### On the local machine
 
 - These assume psql is installed : pgAdmin used to create the database beforehand
@@ -78,4 +80,5 @@ to access the PSQL tool
 - Go
 - Postgres
 - Sqlc
+- Golang migrate
 - Others . . .
