@@ -18,4 +18,5 @@
 ## Technologies
 
 - Go
+- Postgres
 - Others . . .
