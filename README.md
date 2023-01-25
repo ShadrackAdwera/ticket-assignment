@@ -15,63 +15,61 @@
 
 ![simple-tickets](./Simple%20Tickets.png)
 
-## Commands
+### Migrations
 
-### Locally
+### On the local machine
 
-These assume psql is installed : pgAdmin used to create the database beforehand
+- These assume psql is installed : pgAdmin used to create the database beforehand
 
-1.  Migrations
+  - init migration : create initial migration
 
-    - init migration : create initial migration
+           migrate create -ext sql -dir db/migration -seq init_schema
 
-             `migrate create -ext sql -dir db/migration -seq         init_schema`
+  - Run migration
 
-    - Run migration
-
-             `migrate -path db/migrations -database "postgresql://username:password@localhost:5432/ticket-assignment?sslmode=disable" -verbose up`
+           migrate -path db/migrations -database "postgresql://root:password@localhost:5432/ticket-assignment?sslmode=disable" -verbose up
 
 ### Using a Docker Container
 
-- Pull Postgres alpine from Dockerhub :
+- Pull postgres alpine image from Dockerhub :
 
-        `docker pull postgres:15-alpine`
+        docker pull postgres:15-alpine
 
-- then run docker image to create the container in detached mode
+- then run the docker image pulled to create the container in detached mode
 
-        `docker run --name postgres15 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=password -d postgres:15-alpine`
+        docker run --name postgres15 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=password -d postgres:15-alpine
 
 - to access the linux terminal inside the container, run
 
-        `docker exec -it postgres15 /bin/sh`
+        docker exec -it postgres15 /bin/sh
 
 - then run
 
-        `createdb --username=root --owner=root ticket-assignment`
+        createdb --username=root --owner=root ticket-assignment
 
 to create the database
 
 - then run
 
-        `psql ticket-assignment`
+        psql ticket-assignment
 
 to access the PSQL tool
 
-- OR use a single command to create the database
+- OR use a single docker command to create the database
 
-        `docker exec -it postgres15 createdb --username=root --owner=root ticket-assignment`
+        docker exec -it postgres15 createdb --username=root --owner=root ticket-assignment
 
 - then access the PSQL console without using the command shell
 
-        `docker exec -it postgres15 psql -U root ticket-assignment`
+        docker exec -it postgres15 psql -U root ticket-assignment
 
-2. SQLC
+### SQLC
 
 - [SQLC](https://github.com/kyleconroy/sqlc/tree/v1.4.0) generates boiler plate code for CRUD operations on the database using the SQL queries written.
 
   1.  On the root folder init SQLC to create sql.yaml file
 
-          `sqlc init`
+          sqlc init
 
   . . . the rest of the commands can be located in the Makefile
 
