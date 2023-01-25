@@ -1,3 +1,3 @@
-DROP TABLE agents;
-DRoP TABLE tickets;
-DROP TABLE assignments;
+DROP TABLE IF EXISTS agents;
+DRoP TABLE IF EXISTS tickets;
+DROP TABLE IF EXISTS assignments;
