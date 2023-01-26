@@ -28,6 +28,14 @@ func GenerateRandomString() string {
 	return RandomString(10)
 }
 
+func GenerateTicketTitle() string {
+	return RandomString(15)
+}
+
+func GenerateTicketDescription() string {
+	return RandomString(60)
+}
+
 func GetAgentStatus() string {
 	status := []string{"ACTIVE", "INACTIVE"}
 	return status[rand.Intn(len(status))]
