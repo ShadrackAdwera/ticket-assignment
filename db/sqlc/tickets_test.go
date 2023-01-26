@@ -111,6 +111,7 @@ func TestDeleteTicket(t *testing.T) {
 	require.NoError(t, err)
 
 	foundTicket, err := testQuery.GetAgent(context.Background(), ticket.ID)
-	require.ErrorIs(t, err, sql.ErrNoRows)
+
+	require.Equal(t, err.Error(), sql.ErrNoRows.Error())
 	require.Empty(t, foundTicket)
 }
