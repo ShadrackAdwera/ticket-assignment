@@ -94,6 +94,7 @@ func TestDeleteAgent(t *testing.T) {
 	require.NoError(t, err)
 
 	foundAgent, err := testQuery.GetAgent(context.Background(), createdAgent.ID)
-	require.ErrorIs(t, err, sql.ErrNoRows)
+	require.Error(t, err)
+	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, foundAgent)
 }
