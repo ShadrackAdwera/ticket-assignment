@@ -38,6 +38,6 @@ COMMENT ON COLUMN "assignments"."status" IS 'Ticket Status can be PENDING or RES
 
 ALTER TABLE "tickets" ADD FOREIGN KEY ("assigned_to") REFERENCES "agents" ("id");
 
-ALTER TABLE "assignments" ADD FOREIGN KEY ("ticket_id") REFERENCES "tickets" ("id");
+ALTER TABLE "assignments" ADD FOREIGN KEY ("ticket_id") REFERENCES "tickets" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "assignments" ADD FOREIGN KEY ("agent_id") REFERENCES "agents" ("id");
+ALTER TABLE "assignments" ADD FOREIGN KEY ("agent_id") REFERENCES "agents" ("id") ON DELETE CASCADE;
