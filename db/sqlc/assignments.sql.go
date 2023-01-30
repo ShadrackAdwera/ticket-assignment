@@ -87,10 +87,17 @@ func (q *Queries) GetAssignmentForUpdate(ctx context.Context, id int64) (Assignm
 const getAssignments = `-- name: GetAssignments :many
 SELECT id, ticket_id, agent_id, status, assigned_at FROM assignments
 ORDER BY id
+LIMIT $1
+OFFSET $2
 `
 
-func (q *Queries) GetAssignments(ctx context.Context) ([]Assignment, error) {
-	rows, err := q.db.QueryContext(ctx, getAssignments)
+type GetAssignmentsParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]Assignment, error) {
+	rows, err := q.db.QueryContext(ctx, getAssignments, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
