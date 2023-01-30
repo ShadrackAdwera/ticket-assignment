@@ -4,7 +4,9 @@ WHERE id = $1 LIMIT 1;
 
 -- name: GetAssignments :many
 SELECT * FROM assignments
-ORDER BY id;
+ORDER BY id
+LIMIT $1
+OFFSET $2;
 
 -- name: GetAssignmentForUpdate :one
 SELECT * FROM assignments
