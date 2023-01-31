@@ -7,13 +7,40 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
+
+const assignTicketToAgent = `-- name: AssignTicketToAgent :one
+UPDATE tickets SET assigned_to = $2, 
+status = $3
+WHERE id = $1 RETURNING id, title, description, status, assigned_to, created_at
+`
+
+type AssignTicketToAgentParams struct {
+	ID         int64         `json:"id"`
+	AssignedTo sql.NullInt64 `json:"assigned_to"`
+	Status     string        `json:"status"`
+}
+
+func (q *Queries) AssignTicketToAgent(ctx context.Context, arg AssignTicketToAgentParams) (Ticket, error) {
+	row := q.db.QueryRowContext(ctx, assignTicketToAgent, arg.ID, arg.AssignedTo, arg.Status)
+	var i Ticket
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.Status,
+		&i.AssignedTo,
+		&i.CreatedAt,
+	)
+	return i, err
+}
 
 const createTicket = `-- name: CreateTicket :one
 INSERT INTO tickets (
-  title, description, status
+  title, description
 ) VALUES (
-  $1, $2, $3
+  $1, $2
 )
 RETURNING id, title, description, status, assigned_to, created_at
 `
@@ -21,11 +48,10 @@ RETURNING id, title, description, status, assigned_to, created_at
 type CreateTicketParams struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Status      string `json:"status"`
 }
 
 func (q *Queries) CreateTicket(ctx context.Context, arg CreateTicketParams) (Ticket, error) {
-	row := q.db.QueryRowContext(ctx, createTicket, arg.Title, arg.Description, arg.Status)
+	row := q.db.QueryRowContext(ctx, createTicket, arg.Title, arg.Description)
 	var i Ticket
 	err := row.Scan(
 		&i.ID,
@@ -89,11 +115,16 @@ func (q *Queries) GetTicketForUpdate(ctx context.Context, id int64) (Ticket, err
 
 const getTickets = `-- name: GetTickets :many
 SELECT id, title, description, status, assigned_to, created_at FROM tickets
-ORDER BY id
+LIMIT $1 OFFSET $2
 `
 
-func (q *Queries) GetTickets(ctx context.Context) ([]Ticket, error) {
-	rows, err := q.db.QueryContext(ctx, getTickets)
+type GetTicketsParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticket, error) {
+	rows, err := q.db.QueryContext(ctx, getTickets, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
