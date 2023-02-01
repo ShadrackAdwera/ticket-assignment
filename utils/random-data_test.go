@@ -33,3 +33,21 @@ func TestGetAgentStatus(t *testing.T) {
 	require.NotEmpty(t, status)
 	require.True(t, isValidStatus)
 }
+
+func TestGenerateRandomString(t *testing.T) {
+	randoS := GenerateRandomString()
+
+	require.Equal(t, len(randoS), 10)
+}
+
+func TestGenerateTicketTitle(t *testing.T) {
+	randoS := GenerateTicketTitle()
+
+	require.Equal(t, len(randoS), 15)
+}
+
+func TestGenerateTicketDescription(t *testing.T) {
+	randoS := GenerateTicketDescription()
+
+	require.Equal(t, len(randoS), 60)
+}
