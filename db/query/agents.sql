@@ -4,7 +4,7 @@ WHERE id = $1 LIMIT 1;
 
 -- name: ListAgents :many
 SELECT * FROM agents
-ORDER BY name
+ORDER BY id
 LIMIT $1
 OFFSET $2;
 

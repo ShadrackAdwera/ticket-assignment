@@ -64,7 +64,7 @@ func (q *Queries) GetAgent(ctx context.Context, id int64) (Agent, error) {
 
 const listAgents = `-- name: ListAgents :many
 SELECT id, name, status, created_at FROM agents
-ORDER BY name
+ORDER BY id
 LIMIT $1
 OFFSET $2
 `
