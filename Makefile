@@ -6,7 +6,7 @@ sqlc:
 	sqlc generate
 tests:
 	go test -v -cover ./...
-mockdb:
+gomock:
 	mockgen -package mockdb --destination db/mocks/tx.go github.com/ShadrackAdwera/ticket-assignment/db/sqlc TxStore
 start:
 	go run main.go
