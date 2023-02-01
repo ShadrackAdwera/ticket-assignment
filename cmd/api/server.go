@@ -19,6 +19,9 @@ func NewServer(store db.TxStore) *Config {
 	// routes
 	router.POST("/agents", server.createAgent)
 	router.GET("/agents/:id", server.getAgent)
+	router.GET("/agents", server.getAgents)
+	router.PATCH("/agents/:id", server.updateAgent)
+	router.DELETE("/agents/:id", server.deleteAgent)
 
 	server.router = router
 	return &server
