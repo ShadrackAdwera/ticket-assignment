@@ -18,6 +18,7 @@ func NewServer(store db.TxStore) *Config {
 
 	// routes
 	router.POST("/agents", server.createAgent)
+	router.GET("/agents/:id", server.getAgent)
 
 	server.router = router
 	return &server
