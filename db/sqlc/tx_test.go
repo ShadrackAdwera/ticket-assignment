@@ -46,7 +46,7 @@ func TestNewTicketAssignment(t *testing.T) {
 		require.NotZero(t, result.Assignment.AssignedAt)
 		require.Equal(t, result.Assignment.Status, status)
 
-		dbCol, err := txStore.Queries.GetAssignment(context.Background(), result.Assignment.ID)
+		dbCol, err := txStore.GetAssignment(context.Background(), result.Assignment.ID)
 
 		require.NoError(t, err)
 		require.Equal(t, dbCol.ID, result.Assignment.ID)
