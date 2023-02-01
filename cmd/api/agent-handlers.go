@@ -36,7 +36,7 @@ func (app *Config) createAgent(ctx *gin.Context) {
 }
 
 type GetAgentQueryParams struct {
-	ID int `uri:"id" binding:"required"`
+	ID int `uri:"id" binding:"required,min=1"`
 }
 
 func (app *Config) getAgent(ctx *gin.Context) {
