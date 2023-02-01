@@ -17,9 +17,9 @@ type Querier interface {
 	DeleteAssignment(ctx context.Context, id int64) error
 	DeleteTicket(ctx context.Context, id int64) error
 	GetAgent(ctx context.Context, id int64) (Agent, error)
-	GetAssignment(ctx context.Context, id int64) (Assignment, error)
+	GetAssignment(ctx context.Context, id int64) (GetAssignmentRow, error)
 	GetAssignmentForUpdate(ctx context.Context, id int64) (Assignment, error)
-	GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]Assignment, error)
+	GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]GetAssignmentsRow, error)
 	GetTicket(ctx context.Context, id int64) (Ticket, error)
 	GetTicketForUpdate(ctx context.Context, id int64) (Ticket, error)
 	GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticket, error)

@@ -1,10 +1,15 @@
 -- name: GetAssignment :one
 SELECT * FROM assignments
-WHERE id = $1 LIMIT 1;
+JOIN tickets ON assignments.ticket_id = tickets.id
+JOIN agents ON assignments.agent_id = agents.id
+WHERE assignments.id = $1 
+LIMIT 1;
 
 -- name: GetAssignments :many
 SELECT * FROM assignments
-ORDER BY id
+JOIN tickets ON assignments.ticket_id = tickets.id
+JOIN agents ON assignments.agent_id = agents.id
+ORDER BY assignments.id
 LIMIT $1
 OFFSET $2;
 
