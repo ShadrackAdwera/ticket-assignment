@@ -153,10 +153,10 @@ func (mr *MockTxStoreMockRecorder) GetAgent(arg0, arg1 interface{}) *gomock.Call
 }
 
 // GetAssignment mocks base method.
-func (m *MockTxStore) GetAssignment(arg0 context.Context, arg1 int64) (db.Assignment, error) {
+func (m *MockTxStore) GetAssignment(arg0 context.Context, arg1 int64) (db.GetAssignmentRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAssignment", arg0, arg1)
-	ret0, _ := ret[0].(db.Assignment)
+	ret0, _ := ret[0].(db.GetAssignmentRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -183,10 +183,10 @@ func (mr *MockTxStoreMockRecorder) GetAssignmentForUpdate(arg0, arg1 interface{}
 }
 
 // GetAssignments mocks base method.
-func (m *MockTxStore) GetAssignments(arg0 context.Context, arg1 db.GetAssignmentsParams) ([]db.Assignment, error) {
+func (m *MockTxStore) GetAssignments(arg0 context.Context, arg1 db.GetAssignmentsParams) ([]db.GetAssignmentsRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAssignments", arg0, arg1)
-	ret0, _ := ret[0].([]db.Assignment)
+	ret0, _ := ret[0].([]db.GetAssignmentsRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
