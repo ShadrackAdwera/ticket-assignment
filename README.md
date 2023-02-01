@@ -79,9 +79,10 @@ to access the PSQL tool
 
 - To mock db, gomock package is used together with sqlc.
 
-        mockgen --destination db/mocks/tx.go github.com/ShadrackAdwera/ticket-assignment/db/sqlc TxStore
+        mockgen -package mockdb --destination db/mocks/tx.go github.com/ShadrackAdwera/ticket-assignment/db/sqlc TxStore
 
 - `--destination`: store the generated mockfile, default writes to stdout : we need the input on file in this case located at db/mocks/tx.go
+- `-package` : sets your package name
 - `github.com/ShadrackAdwera/ticket-assignment/db/sqlc TxStore` : location of the interface used and the name of the interface used to generate the gomock file.
 - SQLC generates the interface with the method signature of all methods to be implemented which is `object compositioned` by the TxStore interface
 
