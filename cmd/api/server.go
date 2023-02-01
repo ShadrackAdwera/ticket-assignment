@@ -6,11 +6,11 @@ import (
 )
 
 type Config struct {
-	store  *db.TxStore
+	store  db.TxStore
 	router *gin.Engine
 }
 
-func NewServer(store *db.TxStore) *Config {
+func NewServer(store db.TxStore) *Config {
 	server := Config{
 		store: store,
 	}

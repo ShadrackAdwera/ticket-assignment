@@ -5,20 +5,25 @@ import (
 	"database/sql"
 )
 
-type TxStore struct {
+type TxStore interface {
+	Querier
+	NewTicketAssignment(ctx context.Context, args CreateAssignmentParams) (NewTicketAssignmentResult, error)
+}
+
+type TxSqlStore struct {
 	*Queries
 	db *sql.DB
 }
 
-func NewTxStore(db *sql.DB) *TxStore {
-	return &TxStore{
+func NewTxStore(db *sql.DB) TxStore {
+	return &TxSqlStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // executes a function within a DB transancion
-func (txStore *TxStore) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (txStore *TxSqlStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := txStore.db.BeginTx(ctx, &sql.TxOptions{
 		Isolation: sql.LevelReadCommitted,
 	})
@@ -53,7 +58,7 @@ type NewTicketAssignmentResult struct {
 	Assignment Assignment `json:"assignment"`
 }
 
-func (txStore *TxStore) NewTicketAssignment(ctx context.Context, args CreateAssignmentParams) (NewTicketAssignmentResult, error) {
+func (txStore *TxSqlStore) NewTicketAssignment(ctx context.Context, args CreateAssignmentParams) (NewTicketAssignmentResult, error) {
 	var ticketAssignmentResult NewTicketAssignmentResult
 
 	err := txStore.execTx(ctx, func(q *Queries) error {
