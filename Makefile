@@ -8,8 +8,8 @@ tests:
 	go test -v -cover ./...
 mockdb:
 	mockgen -package mockdb --destination db/mocks/tx.go github.com/ShadrackAdwera/ticket-assignment/db/sqlc TxStore
-server:
+start:
 	go run main.go
 
-.PHONY: migrate_up migrate_down sqlc tests mockdb server
+.PHONY: migrate_up migrate_down sqlc tests mockdb start
 	
