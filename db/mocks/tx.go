@@ -95,6 +95,21 @@ func (mr *MockTxStoreMockRecorder) CreateTicket(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTicket", reflect.TypeOf((*MockTxStore)(nil).CreateTicket), arg0, arg1)
 }
 
+// CreateUser mocks base method.
+func (m *MockTxStore) CreateUser(arg0 context.Context, arg1 db.CreateUserParams) (db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1)
+	ret0, _ := ret[0].(db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockTxStoreMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockTxStore)(nil).CreateUser), arg0, arg1)
+}
+
 // DeleteAgent mocks base method.
 func (m *MockTxStore) DeleteAgent(arg0 context.Context, arg1 int64) error {
 	m.ctrl.T.Helper()
@@ -242,6 +257,21 @@ func (mr *MockTxStoreMockRecorder) GetTickets(arg0, arg1 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTickets", reflect.TypeOf((*MockTxStore)(nil).GetTickets), arg0, arg1)
 }
 
+// GetUser mocks base method.
+func (m *MockTxStore) GetUser(arg0 context.Context, arg1 int64) (db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
+	ret0, _ := ret[0].(db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUser indicates an expected call of GetUser.
+func (mr *MockTxStoreMockRecorder) GetUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockTxStore)(nil).GetUser), arg0, arg1)
+}
+
 // ListAgents mocks base method.
 func (m *MockTxStore) ListAgents(arg0 context.Context, arg1 db.ListAgentsParams) ([]db.Agent, error) {
 	m.ctrl.T.Helper()
@@ -255,6 +285,21 @@ func (m *MockTxStore) ListAgents(arg0 context.Context, arg1 db.ListAgentsParams)
 func (mr *MockTxStoreMockRecorder) ListAgents(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAgents", reflect.TypeOf((*MockTxStore)(nil).ListAgents), arg0, arg1)
+}
+
+// ListUsers mocks base method.
+func (m *MockTxStore) ListUsers(arg0 context.Context, arg1 db.ListUsersParams) ([]db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUsers", arg0, arg1)
+	ret0, _ := ret[0].([]db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListUsers indicates an expected call of ListUsers.
+func (mr *MockTxStoreMockRecorder) ListUsers(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockTxStore)(nil).ListUsers), arg0, arg1)
 }
 
 // NewTicketAssignment mocks base method.

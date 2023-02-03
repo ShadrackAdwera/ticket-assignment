@@ -11,26 +11,28 @@ import (
 
 const createAgent = `-- name: CreateAgent :one
 INSERT INTO agents (
-  name, status
+  name, status, user_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
-RETURNING id, name, status, created_at
+RETURNING id, name, status, created_at, user_id
 `
 
 type CreateAgentParams struct {
 	Name   string `json:"name"`
 	Status string `json:"status"`
+	UserID int32  `json:"user_id"`
 }
 
 func (q *Queries) CreateAgent(ctx context.Context, arg CreateAgentParams) (Agent, error) {
-	row := q.db.QueryRowContext(ctx, createAgent, arg.Name, arg.Status)
+	row := q.db.QueryRowContext(ctx, createAgent, arg.Name, arg.Status, arg.UserID)
 	var i Agent
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Status,
 		&i.CreatedAt,
+		&i.UserID,
 	)
 	return i, err
 }
@@ -46,7 +48,7 @@ func (q *Queries) DeleteAgent(ctx context.Context, id int64) error {
 }
 
 const getAgent = `-- name: GetAgent :one
-SELECT id, name, status, created_at FROM agents
+SELECT id, name, status, created_at, user_id FROM agents
 WHERE id = $1 LIMIT 1
 `
 
@@ -58,12 +60,13 @@ func (q *Queries) GetAgent(ctx context.Context, id int64) (Agent, error) {
 		&i.Name,
 		&i.Status,
 		&i.CreatedAt,
+		&i.UserID,
 	)
 	return i, err
 }
 
 const listAgents = `-- name: ListAgents :many
-SELECT id, name, status, created_at FROM agents
+SELECT id, name, status, created_at, user_id FROM agents
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -88,6 +91,7 @@ func (q *Queries) ListAgents(ctx context.Context, arg ListAgentsParams) ([]Agent
 			&i.Name,
 			&i.Status,
 			&i.CreatedAt,
+			&i.UserID,
 		); err != nil {
 			return nil, err
 		}
@@ -104,7 +108,7 @@ func (q *Queries) ListAgents(ctx context.Context, arg ListAgentsParams) ([]Agent
 
 const updateAgent = `-- name: UpdateAgent :one
 UPDATE agents SET status = $2
-WHERE id = $1 RETURNING id, name, status, created_at
+WHERE id = $1 RETURNING id, name, status, created_at, user_id
 `
 
 type UpdateAgentParams struct {
@@ -120,6 +124,7 @@ func (q *Queries) UpdateAgent(ctx context.Context, arg UpdateAgentParams) (Agent
 		&i.Name,
 		&i.Status,
 		&i.CreatedAt,
+		&i.UserID,
 	)
 	return i, err
 }

@@ -11,9 +11,12 @@ import (
 )
 
 func CreateTicket(t *testing.T) Ticket {
+	user := createRandomUser(t)
+
 	newTicketArgs := CreateTicketParams{
 		Title:       utils.GenerateTicketTitle(),
 		Description: utils.GenerateTicketDescription(),
+		CreatedbyID: int32(user.ID),
 	}
 
 	ticket, err := testQuery.CreateTicket(context.Background(), newTicketArgs)

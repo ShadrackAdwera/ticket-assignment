@@ -9,7 +9,15 @@ CREATE TABLE "users" (
 );
 
 -- add userId column to agents
-ALTER TABLE "agents" ADD COLUMN "user_id" SERIAL;
+ALTER TABLE "agents" ADD COLUMN "user_id" SERIAL NOT NULL;
 
--- make column unique index and foreign key
-ALTER TABLE "agents" ADD CONSTRAINT "name_user_id_key" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "agents" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+
+ALTER TABLE "agents" ADD CONSTRAINT "name_user_id_key" UNIQUE ("name", "user_id");
+
+-- add createdby column to tickets
+ALTER TABLE "tickets" ADD COLUMN "createdby_id" SERIAL NOT NULL;
+
+ALTER TABLE "tickets" ADD FOREIGN KEY ("createdby_id") REFERENCES "users" ("id");
+
+ALTER TABLE "tickets" ADD CONSTRAINT "createdby_id_assignedto_id_key" UNIQUE ("assigned_to", "createdby_id");

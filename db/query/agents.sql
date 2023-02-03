@@ -10,9 +10,9 @@ OFFSET $2;
 
 -- name: CreateAgent :one
 INSERT INTO agents (
-  name, status
+  name, status, user_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
 RETURNING *;
 

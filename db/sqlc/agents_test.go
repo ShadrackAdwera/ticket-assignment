@@ -11,9 +11,11 @@ import (
 )
 
 func CreateAgent(t *testing.T) Agent {
+	user := createRandomUser(t)
 	agentArgs := CreateAgentParams{
-		Name:   utils.GenerateRandomString(),
+		Name:   user.Username,
 		Status: utils.GetAgentStatus(),
+		UserID: int32(user.ID),
 	}
 	agent, err := testQuery.CreateAgent(context.Background(), agentArgs)
 
@@ -27,16 +29,7 @@ func CreateAgent(t *testing.T) Agent {
 }
 
 func TestCreateAgent(t *testing.T) {
-	newAgent := CreateAgentParams{
-		Name:   utils.GenerateRandomString(),
-		Status: utils.GetAgentStatus(),
-	}
-	res, err := testQuery.CreateAgent(context.Background(), newAgent)
-
-	require.NoError(t, err)
-	require.Equal(t, newAgent.Name, res.Name)
-	require.Equal(t, newAgent.Status, res.Status)
-	require.NotZero(t, res.CreatedAt)
+	CreateAgent(t)
 }
 
 func TestListAgents(t *testing.T) {
