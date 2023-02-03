@@ -13,6 +13,7 @@ type Querier interface {
 	CreateAgent(ctx context.Context, arg CreateAgentParams) (Agent, error)
 	CreateAssignment(ctx context.Context, arg CreateAssignmentParams) (Assignment, error)
 	CreateTicket(ctx context.Context, arg CreateTicketParams) (Ticket, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAgent(ctx context.Context, id int64) error
 	DeleteAssignment(ctx context.Context, id int64) error
 	DeleteTicket(ctx context.Context, id int64) error
@@ -23,7 +24,9 @@ type Querier interface {
 	GetTicket(ctx context.Context, id int64) (Ticket, error)
 	GetTicketForUpdate(ctx context.Context, id int64) (Ticket, error)
 	GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticket, error)
+	GetUser(ctx context.Context, id int64) (User, error)
 	ListAgents(ctx context.Context, arg ListAgentsParams) ([]Agent, error)
+	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
 	UpdateAgent(ctx context.Context, arg UpdateAgentParams) (Agent, error)
 	UpdateAssignment(ctx context.Context, arg UpdateAssignmentParams) (Assignment, error)
 	UpdateTicket(ctx context.Context, arg UpdateTicketParams) (Ticket, error)

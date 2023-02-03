@@ -13,9 +13,9 @@ FOR NO KEY UPDATE;
 
 -- name: CreateTicket :one
 INSERT INTO tickets (
-  title, description
+  title, description, createdby_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
 RETURNING *;
 

@@ -15,6 +15,7 @@ type Agent struct {
 	// Agent Status can be active or inactive
 	Status    string    `json:"status"`
 	CreatedAt time.Time `json:"created_at"`
+	UserID    int32     `json:"user_id"`
 }
 
 type Assignment struct {
@@ -31,7 +32,17 @@ type Ticket struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	// Ticket Status can be PENDING or RESOLVED
-	Status     string        `json:"status"`
-	AssignedTo sql.NullInt64 `json:"assigned_to"`
-	CreatedAt  time.Time     `json:"created_at"`
+	Status      string        `json:"status"`
+	AssignedTo  sql.NullInt64 `json:"assigned_to"`
+	CreatedAt   time.Time     `json:"created_at"`
+	CreatedbyID int32         `json:"createdby_id"`
+}
+
+type User struct {
+	ID                int64     `json:"id"`
+	Username          string    `json:"username"`
+	Email             string    `json:"email"`
+	Password          string    `json:"password"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	CreatedAt         time.Time `json:"created_at"`
 }

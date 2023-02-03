@@ -50,7 +50,7 @@ func (q *Queries) DeleteAssignment(ctx context.Context, id int64) error {
 }
 
 const getAssignment = `-- name: GetAssignment :one
-SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, agents.id, name, agents.status, agents.created_at FROM assignments
+SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, createdby_id, agents.id, name, agents.status, agents.created_at, user_id FROM assignments
 JOIN tickets ON assignments.ticket_id = tickets.id
 JOIN agents ON assignments.agent_id = agents.id
 WHERE assignments.id = $1 
@@ -69,10 +69,12 @@ type GetAssignmentRow struct {
 	Status_2    string        `json:"status_2"`
 	AssignedTo  sql.NullInt64 `json:"assigned_to"`
 	CreatedAt   time.Time     `json:"created_at"`
+	CreatedbyID int32         `json:"createdby_id"`
 	ID_3        int64         `json:"id_3"`
 	Name        string        `json:"name"`
 	Status_3    string        `json:"status_3"`
 	CreatedAt_2 time.Time     `json:"created_at_2"`
+	UserID      int32         `json:"user_id"`
 }
 
 func (q *Queries) GetAssignment(ctx context.Context, id int64) (GetAssignmentRow, error) {
@@ -90,10 +92,12 @@ func (q *Queries) GetAssignment(ctx context.Context, id int64) (GetAssignmentRow
 		&i.Status_2,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 		&i.ID_3,
 		&i.Name,
 		&i.Status_3,
 		&i.CreatedAt_2,
+		&i.UserID,
 	)
 	return i, err
 }
@@ -118,7 +122,7 @@ func (q *Queries) GetAssignmentForUpdate(ctx context.Context, id int64) (Assignm
 }
 
 const getAssignments = `-- name: GetAssignments :many
-SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, agents.id, name, agents.status, agents.created_at FROM assignments
+SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, createdby_id, agents.id, name, agents.status, agents.created_at, user_id FROM assignments
 JOIN tickets ON assignments.ticket_id = tickets.id
 JOIN agents ON assignments.agent_id = agents.id
 ORDER BY assignments.id
@@ -143,10 +147,12 @@ type GetAssignmentsRow struct {
 	Status_2    string        `json:"status_2"`
 	AssignedTo  sql.NullInt64 `json:"assigned_to"`
 	CreatedAt   time.Time     `json:"created_at"`
+	CreatedbyID int32         `json:"createdby_id"`
 	ID_3        int64         `json:"id_3"`
 	Name        string        `json:"name"`
 	Status_3    string        `json:"status_3"`
 	CreatedAt_2 time.Time     `json:"created_at_2"`
+	UserID      int32         `json:"user_id"`
 }
 
 func (q *Queries) GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]GetAssignmentsRow, error) {
@@ -170,10 +176,12 @@ func (q *Queries) GetAssignments(ctx context.Context, arg GetAssignmentsParams) 
 			&i.Status_2,
 			&i.AssignedTo,
 			&i.CreatedAt,
+			&i.CreatedbyID,
 			&i.ID_3,
 			&i.Name,
 			&i.Status_3,
 			&i.CreatedAt_2,
+			&i.UserID,
 		); err != nil {
 			return nil, err
 		}

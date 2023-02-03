@@ -13,7 +13,7 @@ import (
 const assignTicketToAgent = `-- name: AssignTicketToAgent :one
 UPDATE tickets SET assigned_to = $2, 
 status = $3
-WHERE id = $1 RETURNING id, title, description, status, assigned_to, created_at
+WHERE id = $1 RETURNING id, title, description, status, assigned_to, created_at, createdby_id
 `
 
 type AssignTicketToAgentParams struct {
@@ -32,26 +32,28 @@ func (q *Queries) AssignTicketToAgent(ctx context.Context, arg AssignTicketToAge
 		&i.Status,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 	)
 	return i, err
 }
 
 const createTicket = `-- name: CreateTicket :one
 INSERT INTO tickets (
-  title, description
+  title, description, createdby_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
-RETURNING id, title, description, status, assigned_to, created_at
+RETURNING id, title, description, status, assigned_to, created_at, createdby_id
 `
 
 type CreateTicketParams struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	CreatedbyID int32  `json:"createdby_id"`
 }
 
 func (q *Queries) CreateTicket(ctx context.Context, arg CreateTicketParams) (Ticket, error) {
-	row := q.db.QueryRowContext(ctx, createTicket, arg.Title, arg.Description)
+	row := q.db.QueryRowContext(ctx, createTicket, arg.Title, arg.Description, arg.CreatedbyID)
 	var i Ticket
 	err := row.Scan(
 		&i.ID,
@@ -60,6 +62,7 @@ func (q *Queries) CreateTicket(ctx context.Context, arg CreateTicketParams) (Tic
 		&i.Status,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 	)
 	return i, err
 }
@@ -75,7 +78,7 @@ func (q *Queries) DeleteTicket(ctx context.Context, id int64) error {
 }
 
 const getTicket = `-- name: GetTicket :one
-SELECT id, title, description, status, assigned_to, created_at FROM tickets
+SELECT id, title, description, status, assigned_to, created_at, createdby_id FROM tickets
 WHERE id = $1 LIMIT 1
 `
 
@@ -89,12 +92,13 @@ func (q *Queries) GetTicket(ctx context.Context, id int64) (Ticket, error) {
 		&i.Status,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 	)
 	return i, err
 }
 
 const getTicketForUpdate = `-- name: GetTicketForUpdate :one
-SELECT id, title, description, status, assigned_to, created_at FROM tickets
+SELECT id, title, description, status, assigned_to, created_at, createdby_id FROM tickets
 WHERE id = $1 LIMIT 1 
 FOR NO KEY UPDATE
 `
@@ -109,12 +113,13 @@ func (q *Queries) GetTicketForUpdate(ctx context.Context, id int64) (Ticket, err
 		&i.Status,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 	)
 	return i, err
 }
 
 const getTickets = `-- name: GetTickets :many
-SELECT id, title, description, status, assigned_to, created_at FROM tickets
+SELECT id, title, description, status, assigned_to, created_at, createdby_id FROM tickets
 LIMIT $1 OFFSET $2
 `
 
@@ -139,6 +144,7 @@ func (q *Queries) GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticke
 			&i.Status,
 			&i.AssignedTo,
 			&i.CreatedAt,
+			&i.CreatedbyID,
 		); err != nil {
 			return nil, err
 		}
@@ -155,7 +161,7 @@ func (q *Queries) GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticke
 
 const updateTicket = `-- name: UpdateTicket :one
 UPDATE tickets SET status = $2
-WHERE id = $1 RETURNING id, title, description, status, assigned_to, created_at
+WHERE id = $1 RETURNING id, title, description, status, assigned_to, created_at, createdby_id
 `
 
 type UpdateTicketParams struct {
@@ -173,6 +179,7 @@ func (q *Queries) UpdateTicket(ctx context.Context, arg UpdateTicketParams) (Tic
 		&i.Status,
 		&i.AssignedTo,
 		&i.CreatedAt,
+		&i.CreatedbyID,
 	)
 	return i, err
 }
