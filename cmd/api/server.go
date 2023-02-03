@@ -3,6 +3,8 @@ package api
 import (
 	db "github.com/ShadrackAdwera/ticket-assignment/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 )
 
 type Config struct {
@@ -15,6 +17,10 @@ func NewServer(store db.TxStore) *Config {
 		store: store,
 	}
 	router := gin.Default()
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("agent-status", isValidAgentStatus)
+	}
 
 	// routes
 	router.POST("/agents", server.createAgent)

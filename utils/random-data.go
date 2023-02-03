@@ -37,6 +37,6 @@ func GenerateTicketDescription() string {
 }
 
 func GetAgentStatus() string {
-	status := []string{"ACTIVE", "INACTIVE"}
+	status := []string{ACTIVE, INACTIVE}
 	return status[rand.Intn(len(status))]
 }

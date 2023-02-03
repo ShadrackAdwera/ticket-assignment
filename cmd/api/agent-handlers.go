@@ -10,7 +10,7 @@ import (
 // Binding from JSON
 type CreateAgentJson struct {
 	Name   string `json:"name" binding:"required"`
-	Status string `json:"status" binding:"required"`
+	Status string `json:"status" binding:"required,agent-status"`
 }
 
 func (app *Config) createAgent(ctx *gin.Context) {
@@ -82,7 +82,7 @@ func (app *Config) getAgents(ctx *gin.Context) {
 }
 
 type UpdateAgentArgs struct {
-	Status string `json:"status" binding:"required"`
+	Status string `json:"status" binding:"required,agent-status"`
 }
 
 func (app *Config) updateAgent(ctx *gin.Context) {
