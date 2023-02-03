@@ -11,5 +11,5 @@ gomock:
 start:
 	go run main.go
 
-.PHONY: migrate_up migrate_down sqlc tests mockdb start
+.PHONY: migrate_up migrate_down sqlc tests gomock start
 	
