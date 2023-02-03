@@ -13,7 +13,7 @@ ALTER TABLE "agents" ADD COLUMN "user_id" SERIAL NOT NULL;
 
 ALTER TABLE "agents" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "agents" ADD CONSTRAINT "name_user_id_key" UNIQUE ("name", "user_id");
+ALTER TABLE "agents" ADD CONSTRAINT "user_id_key" UNIQUE ("user_id");
 
 -- add createdby column to tickets
 ALTER TABLE "tickets" ADD COLUMN "createdby_id" SERIAL NOT NULL;

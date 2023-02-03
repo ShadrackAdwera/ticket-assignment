@@ -1,5 +1,5 @@
-ALTER TABLE IF EXISTS "agents" DROP CONSTRAINT IF EXISTS "name_user_id_key";
+ALTER TABLE IF EXISTS "agents" DROP CONSTRAINT IF EXISTS "user_id_key";
 
 ALTER TABLE IF EXISTS "agents" DROP COLUMN ("user_id");
 
-DROP TABLE IF EXISTS "users";
+--DROP TABLE IF EXISTS "users";

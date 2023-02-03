@@ -1,3 +1,4 @@
 DROP TABLE IF EXISTS "assignments";
 DRoP TABLE IF EXISTS "tickets";
 DROP TABLE IF EXISTS "agents";
+DROP TABLE IF EXISTS "users";
