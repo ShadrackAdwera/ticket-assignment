@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"time"
 )
 
 const createAssignment = `-- name: CreateAssignment :one
@@ -48,19 +50,50 @@ func (q *Queries) DeleteAssignment(ctx context.Context, id int64) error {
 }
 
 const getAssignment = `-- name: GetAssignment :one
-SELECT id, ticket_id, agent_id, status, assigned_at FROM assignments
-WHERE id = $1 LIMIT 1
+SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, agents.id, name, agents.status, agents.created_at FROM assignments
+JOIN tickets ON assignments.ticket_id = tickets.id
+JOIN agents ON assignments.agent_id = agents.id
+WHERE assignments.id = $1 
+LIMIT 1
 `
 
-func (q *Queries) GetAssignment(ctx context.Context, id int64) (Assignment, error) {
+type GetAssignmentRow struct {
+	ID          int64         `json:"id"`
+	TicketID    int64         `json:"ticket_id"`
+	AgentID     int64         `json:"agent_id"`
+	Status      string        `json:"status"`
+	AssignedAt  time.Time     `json:"assigned_at"`
+	ID_2        int64         `json:"id_2"`
+	Title       string        `json:"title"`
+	Description string        `json:"description"`
+	Status_2    string        `json:"status_2"`
+	AssignedTo  sql.NullInt64 `json:"assigned_to"`
+	CreatedAt   time.Time     `json:"created_at"`
+	ID_3        int64         `json:"id_3"`
+	Name        string        `json:"name"`
+	Status_3    string        `json:"status_3"`
+	CreatedAt_2 time.Time     `json:"created_at_2"`
+}
+
+func (q *Queries) GetAssignment(ctx context.Context, id int64) (GetAssignmentRow, error) {
 	row := q.db.QueryRowContext(ctx, getAssignment, id)
-	var i Assignment
+	var i GetAssignmentRow
 	err := row.Scan(
 		&i.ID,
 		&i.TicketID,
 		&i.AgentID,
 		&i.Status,
 		&i.AssignedAt,
+		&i.ID_2,
+		&i.Title,
+		&i.Description,
+		&i.Status_2,
+		&i.AssignedTo,
+		&i.CreatedAt,
+		&i.ID_3,
+		&i.Name,
+		&i.Status_3,
+		&i.CreatedAt_2,
 	)
 	return i, err
 }
@@ -85,8 +118,10 @@ func (q *Queries) GetAssignmentForUpdate(ctx context.Context, id int64) (Assignm
 }
 
 const getAssignments = `-- name: GetAssignments :many
-SELECT id, ticket_id, agent_id, status, assigned_at FROM assignments
-ORDER BY id
+SELECT assignments.id, ticket_id, agent_id, assignments.status, assigned_at, tickets.id, title, description, tickets.status, assigned_to, tickets.created_at, agents.id, name, agents.status, agents.created_at FROM assignments
+JOIN tickets ON assignments.ticket_id = tickets.id
+JOIN agents ON assignments.agent_id = agents.id
+ORDER BY assignments.id
 LIMIT $1
 OFFSET $2
 `
@@ -96,21 +131,49 @@ type GetAssignmentsParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]Assignment, error) {
+type GetAssignmentsRow struct {
+	ID          int64         `json:"id"`
+	TicketID    int64         `json:"ticket_id"`
+	AgentID     int64         `json:"agent_id"`
+	Status      string        `json:"status"`
+	AssignedAt  time.Time     `json:"assigned_at"`
+	ID_2        int64         `json:"id_2"`
+	Title       string        `json:"title"`
+	Description string        `json:"description"`
+	Status_2    string        `json:"status_2"`
+	AssignedTo  sql.NullInt64 `json:"assigned_to"`
+	CreatedAt   time.Time     `json:"created_at"`
+	ID_3        int64         `json:"id_3"`
+	Name        string        `json:"name"`
+	Status_3    string        `json:"status_3"`
+	CreatedAt_2 time.Time     `json:"created_at_2"`
+}
+
+func (q *Queries) GetAssignments(ctx context.Context, arg GetAssignmentsParams) ([]GetAssignmentsRow, error) {
 	rows, err := q.db.QueryContext(ctx, getAssignments, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Assignment
+	var items []GetAssignmentsRow
 	for rows.Next() {
-		var i Assignment
+		var i GetAssignmentsRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.TicketID,
 			&i.AgentID,
 			&i.Status,
 			&i.AssignedAt,
+			&i.ID_2,
+			&i.Title,
+			&i.Description,
+			&i.Status_2,
+			&i.AssignedTo,
+			&i.CreatedAt,
+			&i.ID_3,
+			&i.Name,
+			&i.Status_3,
+			&i.CreatedAt_2,
 		); err != nil {
 			return nil, err
 		}
