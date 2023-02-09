@@ -22,8 +22,8 @@ type UserStruct struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 type UserResponse struct {
-	user        *UserStruct
-	AccessToken string
+	User        *UserStruct `json:"user"`
+	AccessToken string      `json:"access_token"`
 }
 
 func (app *Config) signUp(ctx *gin.Context) {
@@ -60,7 +60,7 @@ func (app *Config) signUp(ctx *gin.Context) {
 	}
 
 	authUser := &UserResponse{
-		user: &UserStruct{
+		User: &UserStruct{
 			ID:        newUser.ID,
 			Username:  newUser.Username,
 			Email:     newUser.Email,
