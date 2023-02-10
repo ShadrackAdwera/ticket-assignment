@@ -40,3 +40,7 @@ func GetAgentStatus() string {
 	status := []string{ACTIVE, INACTIVE}
 	return status[rand.Intn(len(status))]
 }
+
+func RandomInteger(min, max int64) int64 {
+	return min + rand.Int63n(max-min+1)
+}

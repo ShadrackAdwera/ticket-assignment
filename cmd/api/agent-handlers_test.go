@@ -14,10 +14,25 @@ import (
 
 	mockdb "github.com/ShadrackAdwera/ticket-assignment/db/mocks"
 	db "github.com/ShadrackAdwera/ticket-assignment/db/sqlc"
+	"github.com/ShadrackAdwera/ticket-assignment/token"
 	"github.com/ShadrackAdwera/ticket-assignment/utils"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
+
+func addAuthorization(t *testing.T,
+	request *http.Request,
+	tokenMaker token.TokenMaker,
+	authorizationType string,
+	username string,
+	id int64,
+	duration time.Duration) {
+	token, err := tokenMaker.CreateToken(username, id, duration)
+	require.NoError(t, err)
+
+	authorizationHeader := fmt.Sprintf("%s %s", authorizationType, token)
+	request.Header.Set(authorizationHeaderKey, authorizationHeader)
+}
 
 func generateAgent() db.Agent {
 	return db.Agent{
@@ -49,6 +64,7 @@ func TestGetAgentEndpoint(t *testing.T) {
 		name          string
 		status        string
 		id            int64
+		setUpAuth     func(t *testing.T, request *http.Request, tokenMaker token.TokenMaker)
 		buildStubs    func(mockdb *mockdb.MockTxStore)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
@@ -56,6 +72,9 @@ func TestGetAgentEndpoint(t *testing.T) {
 			name:   "OK",
 			status: "ACTIVE",
 			id:     agent.ID,
+			setUpAuth: func(t *testing.T, request *http.Request, tokenMaker token.TokenMaker) {
+				addAuthorization(t, request, tokenMaker, authTypeBearer, utils.RandomString(6), utils.RandomInteger(1, 100), time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockTxStore) {
 				store.EXPECT().GetAgent(gomock.Any(), gomock.Eq(agent.ID)).Times(1).Return(agent, nil)
 			},
@@ -68,6 +87,9 @@ func TestGetAgentEndpoint(t *testing.T) {
 			name:   "AgentNotFound",
 			status: "ACTIVE",
 			id:     agent.ID,
+			setUpAuth: func(t *testing.T, request *http.Request, tokenMaker token.TokenMaker) {
+				addAuthorization(t, request, tokenMaker, authTypeBearer, utils.RandomString(6), utils.RandomInteger(1, 100), time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockTxStore) {
 				store.EXPECT().GetAgent(gomock.Any(), gomock.Eq(agent.ID)).Times(1).Return(db.Agent{}, sql.ErrNoRows)
 			},
@@ -79,6 +101,9 @@ func TestGetAgentEndpoint(t *testing.T) {
 			name:   "ErrInternalServerError",
 			status: "ACTIVE",
 			id:     agent.ID,
+			setUpAuth: func(t *testing.T, request *http.Request, tokenMaker token.TokenMaker) {
+				addAuthorization(t, request, tokenMaker, authTypeBearer, utils.RandomString(6), utils.RandomInteger(1, 100), time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockTxStore) {
 				store.EXPECT().GetAgent(gomock.Any(), gomock.Eq(agent.ID)).Times(1).Return(db.Agent{}, sql.ErrConnDone)
 			},
@@ -90,6 +115,9 @@ func TestGetAgentEndpoint(t *testing.T) {
 			name:   "ErrBadRequest",
 			status: "ACTIVE",
 			id:     0,
+			setUpAuth: func(t *testing.T, request *http.Request, tokenMaker token.TokenMaker) {
+				addAuthorization(t, request, tokenMaker, authTypeBearer, utils.RandomString(6), utils.RandomInteger(1, 100), time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockTxStore) {
 				store.EXPECT().GetAgent(gomock.Any(), gomock.Any()).Times(0)
 			},
@@ -108,13 +136,13 @@ func TestGetAgentEndpoint(t *testing.T) {
 			store := mockdb.NewMockTxStore(ctlr)
 			testCase.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/agents/%d", testCase.id)
 			req, err := http.NewRequest(http.MethodGet, url, nil)
-
 			require.NoError(t, err)
+			testCase.setUpAuth(t, req, server.tokenMaker)
 
 			server.router.ServeHTTP(recorder, req)
 			testCase.checkResponse(t, recorder)

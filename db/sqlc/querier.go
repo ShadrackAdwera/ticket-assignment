@@ -25,6 +25,7 @@ type Querier interface {
 	GetTicketForUpdate(ctx context.Context, id int64) (Ticket, error)
 	GetTickets(ctx context.Context, arg GetTicketsParams) ([]Ticket, error)
 	GetUser(ctx context.Context, id int64) (User, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ListAgents(ctx context.Context, arg ListAgentsParams) ([]Agent, error)
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
 	UpdateAgent(ctx context.Context, arg UpdateAgentParams) (Agent, error)

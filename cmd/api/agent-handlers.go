@@ -5,12 +5,14 @@ import (
 
 	db "github.com/ShadrackAdwera/ticket-assignment/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 // Binding from JSON
 type CreateAgentJson struct {
 	Name   string `json:"name" binding:"required"`
 	Status string `json:"status" binding:"required,agent-status"`
+	UserID int    `json:"user_id" binding:"required"`
 }
 
 func (app *Config) createAgent(ctx *gin.Context) {
@@ -23,11 +25,19 @@ func (app *Config) createAgent(ctx *gin.Context) {
 	newAgentArgs := db.CreateAgentParams{
 		Name:   createAgentJson.Name,
 		Status: createAgentJson.Status,
+		UserID: int32(createAgentJson.UserID),
 	}
 
 	agent, err := app.store.CreateAgent(ctx, newAgentArgs)
 
 	if err != nil {
+		if pgErr, ok := (err).(*pq.Error); ok {
+			switch pgErr.Code.Name() {
+			case "foreign_key_violation", "unique_violation":
+				ctx.JSON(http.StatusForbidden, errorJSON(err.Error()))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, errorJSON(err.Error()))
 		return
 	}

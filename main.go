@@ -27,7 +27,7 @@ func main() {
 	}
 
 	store := db.NewTxStore(dbInstance)
-	server := api.NewServer(store)
+	server, err := api.NewServer(store, config)
 
 	err = server.StartServer(config.ServerAddress)
 
