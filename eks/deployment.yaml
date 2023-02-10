@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-assignment-deployment
+  labels:
+    app: ticket-assignment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticket-assignment
+  template:
+    metadata:
+      labels:
+        app: ticket-assignment
+    spec:
+      containers:
+      - name: ticket-assignment
+        image: 527628116652.dkr.ecr.us-east-1.amazonaws.com/ticket-assignment:latest
+        imagePullPolicy: Always
+        resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-assignment-service
+spec:
+  selector:
+    app: ticket-assignment
+  ports:
+    - name: web-port
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
