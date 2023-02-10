@@ -17,6 +17,7 @@ spec:
       containers:
       - name: ticket-assignment
         image: 527628116652.dkr.ecr.us-east-1.amazonaws.com/ticket-assignment:latest
+        imagePullPolicy: Always
         resources:
             requests:
               memory: "128Mi"
