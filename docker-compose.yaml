@@ -12,7 +12,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
-    environment:
+    environment: 
       - DB_SOURCE=postgresql://root:password@postgres:5432/ticket-assignment?sslmode=disable
     depends_on:
       - postgres
