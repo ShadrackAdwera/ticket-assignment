@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ticket-assignment-ingress-service
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: a6fa6dea9552d49f39a4eda97dd38a45-37e08b2ca2fb7fe8.elb.us-east-1.amazonaws.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ticket-assignment-service
+                port:
+                  number: 5000
