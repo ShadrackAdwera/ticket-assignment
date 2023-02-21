@@ -10,6 +10,7 @@ import (
 type Config struct {
 	DbDriver      string        `mapstructure:"DB_DRIVER"`
 	DbSource      string        `mapstructure:"DB_SOURCE"`
+	MigrationUrl  string        `mapstructure:"MIGRATION_URL"`
 	ServerAddress string        `mapstructure:"SERVER_ADDRESS"`
 	SymmetricKey  string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	TokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
